@@ -17,5 +17,7 @@ namespace MyVet.Web.Data.Entities
        [MaxLength(50, ErrorMessage ="El {0} no puede tener una cantidad superior a {1} Caracteres")]
        [Required(ErrorMessage = "El {0} es obligatorio")]
         public string Name { get; set; }
+
+        public ICollection<Pet> Pets { get; set; }
     }
 }

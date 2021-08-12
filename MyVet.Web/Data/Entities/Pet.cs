@@ -41,5 +41,16 @@ namespace MyVet.Web.Data.Entities
         public string ImageFullPath => string.IsNullOrEmpty(ImageUrl)
             ? null
             : $"https://TBD.azurewebsites.net{ImageUrl.Substring(1)}";
+
+
+        public PetType PetType { get; set; }
+
+        public Owner Owner { get; set; }
+
+        public ICollection<History> Histories { get; set; }
+
+
+
+        public ICollection<Agenda> Agendas{ get; set; }
     }
 }
