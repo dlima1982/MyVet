@@ -24,13 +24,13 @@ namespace MyVet.Web.Controllers
         }
 
         [HttpPost]
-        public async Task <IActionResult> Login(LoginViewModel model)
+        public async Task<IActionResult> Login(LoginViewModel model)
         {
 
-            if(ModelState.IsValid)
+            if (ModelState.IsValid)
             {
                 var result = await _userHelper.LoginAsync(model);
-                if(result.Succeeded)
+                if (result.Succeeded)
                 {
                     if (Request.Query.Keys.Contains("ReturnUrl"))
                     {
@@ -41,14 +41,24 @@ namespace MyVet.Web.Controllers
                 }
 
                 ModelState.AddModelError(string.Empty, "User or Password is not Valid");
+                model.Password = string.Empty;
             }
+
             return View(model);
 
         }
 
-            
-         
+        [HttpGet]
+        public async Task <IActionResult> Logout()
+        {
+
+            await _userHelper.LogoutAsync();
+            return RedirectToAction("Index", "Home");
         }
 
+
     }
+
+
+}
 
