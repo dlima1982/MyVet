@@ -65,6 +65,9 @@ else
                     @Html.DisplayNameFor(model => model.Pets.FirstOrDefault().Name)
                 </th>
                 <th>
+                    @Html.DisplayNameFor(model => model.Pets.FirstOrDefault().ImageUrl)
+                </th>
+                <th>
                     @Html.DisplayNameFor(model => model.Pets.FirstOrDefault().Race)
                 </th>
                 <th>
@@ -88,6 +91,13 @@ else
                 <tr>
                     <td>
                         @Html.DisplayFor(modelItem => item.Name)
+                    </td>
+                    <td>
+                        @if(!string.IsNullOrEmpty(item.ImageUrl))
+                        {
+                            <img src="@Url.Content(item.ImageUrl)" alt="Image" style="width:150px;height:150px;max-width: 100%; height: auto;" />
+
+                        }
                     </td>
                     <td>
                         @Html.DisplayFor(modelItem => item.Race)

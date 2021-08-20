@@ -4,13 +4,13 @@
 	ViewData["Title"] = "Create";
 }
 
-<h2>Creacion</h2>
+<h2>Create</h2>
 
-<h4>Dueño</h4>
+<h4>Owner</h4>
 <hr />
 <div class="row">
 	<div class="col-md-4">
-    	<form asp-action="Crear">
+    	<form asp-action="Create">
         	<div asp-validation-summary="ModelOnly" class="text-danger"></div>
 
         	<div class="form-group">
@@ -72,4 +72,3 @@
 @section Scripts {
 	@{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
 }
-
