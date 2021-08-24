@@ -266,24 +266,24 @@ namespace MyVet.Web.Controllers
         [HttpPost]
         public async Task<IActionResult> AddPet(PetViewModel model)
         {
-            if(ModelState.IsValid)
+            if (ModelState.IsValid)
             {
                 var path = string.Empty;
                 //verificamos que la fotografia no venga nula
-                if(model.ImageFile != null)
+                if (model.ImageFile != null)
                 {
                     path = await _imageHelper.UploadImageAsync(model.ImageFile);
-                  
+
                 }
                 //convertir el petviewmodel en Pet para guardar en BD
 
-                var pet = await _converterHelper.ToPetAsync(model, path);
+                var pet = await _converterHelper.ToPetAsync(model, path, true);
                 _context.Pets.Add(pet);
                 await _context.SaveChangesAsync();
                 return RedirectToAction($"Details/{model.OwnerId}");
-
-
             }
+
+            model.PetTypes = _combosHelper.GetComboPetTypes();
             return View(model);
         }
 
@@ -295,20 +295,139 @@ namespace MyVet.Web.Controllers
                 return NotFound();
             }
 
-            var pet = await _context.Pets.FindAsync(id.Value);
-            if ( pet == null)
+            var pet = await _context.Pets
+                .Include(p => p.Owner)
+                .Include(p => p.PetType)
+                .FirstOrDefaultAsync(p => p.Id == id);
+            if (pet == null)
             {
                 return NotFound();
             }
 
-           
+            return View(_converterHelper.ToPetViewModel(pet));
+        }
+
+
+        [HttpPost]
+        public async Task<IActionResult> EditPet(PetViewModel model)
+        {
+            if (ModelState.IsValid)
+            {
+                var path = model.ImageUrl;
+                //verificamos que la fotografia no venga nula
+                if (model.ImageFile != null)
+                {
+                    path = await _imageHelper.UploadImageAsync(model.ImageFile);
+
+                }
+                //convertir el petviewmodel en Pet para guardar en BD
+
+                var pet = await _converterHelper.ToPetAsync(model, path, false);
+                _context.Pets.Update(pet);
+                await _context.SaveChangesAsync();
+                return RedirectToAction($"Details/{model.OwnerId}");
+            }
+
+            model.PetTypes = _combosHelper.GetComboPetTypes();
+            return View(model);
+        }
+
+        public async Task<IActionResult> DetailsPet(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var pet = await _context.Pets
+                .Include(p => p.Owner)
+                .ThenInclude(o => o.User)
+                .Include(p => p.Histories)
+                .ThenInclude(h => h.ServiceType)
+                .FirstOrDefaultAsync(o => o.Id == id.Value);
+
+            if (pet == null)
+            {
+                return NotFound();
+            }
+
+            return View(pet);
+        }
+
+        public async Task<IActionResult> AddHistory(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var pet = await _context.Pets.FindAsync(id.Value);
+            if (pet == null)
+            {
+                return NotFound();
+            }
+
+            var model = new HistoryViewModel
+            {
+                Date = DateTime.UtcNow,
+                PetId = pet.Id,
+                ServiceTypes = _combosHelper.GetComboServiceTypes(),
+            };
 
             return View(model);
         }
 
+        [HttpPost]
+        public async Task<IActionResult> AddHistory(HistoryViewModel model)
+        {
+            if (ModelState.IsValid)
+            {
+                var history = await _converterHelper.ToHistoryAsync(model, true);
+                _context.Histories.Add(history);
+                await _context.SaveChangesAsync();
+                return RedirectToAction($"{nameof(DetailsPet)}/{model.PetId}");
+            }
+
+            model.ServiceTypes = _combosHelper.GetComboServiceTypes();
+            return View(model);
+        }
+
+        public async Task<IActionResult> EditHistory(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var history = await _context.Histories
+                .Include(h => h.Pet)
+                .Include(h => h.ServiceType)
+                .FirstOrDefaultAsync(p => p.Id == id.Value);
+            if (history == null)
+            {
+                return NotFound();
+            }
+
+            return View(_converterHelper.ToHistoryViewModel(history));
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> EditHistory(HistoryViewModel model)
+        {
+            if (ModelState.IsValid)
+            {
+                var history = await _converterHelper.ToHistoryAsync(model, false);
+                _context.Histories.Update(history);
+                await _context.SaveChangesAsync();
+                return RedirectToAction($"{nameof(DetailsPet)}/{model.PetId}");
+            }
+            model.ServiceTypes = _combosHelper.GetComboServiceTypes();
+            return View(model);
+
+
+        }
 
     }
-
 }
 
 
