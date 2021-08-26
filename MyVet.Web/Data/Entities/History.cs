@@ -19,7 +19,7 @@ namespace MyVet.Web.Data.Entities
 
         [Display(Name = "Fecha")]
         [Required(ErrorMessage = "El {0} es obligatorio")]
-        [DisplayFormat(DataFormatString = "{0:yyyy/MM/dd HH:mm}", ApplyFormatInEditMode = true)]
+        [DisplayFormat(DataFormatString = "{0:yyyy/MM/dd}", ApplyFormatInEditMode = true)]
         public DateTime Date { get; set; }
 
         [Display(Name ="Comentarios Adicionales")]
@@ -27,7 +27,7 @@ namespace MyVet.Web.Data.Entities
 
 
         [Display(Name = "Fecha")]
-        [DisplayFormat(DataFormatString = "{0:yyyy/MM/dd HH:mm}")]
+        [DisplayFormat(DataFormatString = "{0:yyyy/MM/dd}")]
         public DateTime DateLocal => Date.ToLocalTime();
 
         public ServiceType ServiceType { get; set; }

@@ -43,11 +43,13 @@ namespace MyVet.Web.Helpers
                 });
             }
         }
+      
+
 
         public async Task<User> GetUserByEmailAsync(string email)
         {
             return await _userManager.FindByEmailAsync(email);
-            
+
         }
 
         public async Task<bool> IsUserInRoleAsync(User user, string roleName)
@@ -68,5 +70,24 @@ namespace MyVet.Web.Helpers
             await _signInManager.SignOutAsync();
         }
 
+
+        //borrado de Owner y usurario
+        public async Task<bool> DeleteUserAsync(string email)
+        {
+            var user = await GetUserByEmailAsync(email);
+            if (user == null)
+            {
+                return true;
+            }
+
+            var response = await _userManager.DeleteAsync(user);
+            return response.Succeeded;
+        }
+
+        //Editar usuario
+        public async Task<IdentityResult> UpdateUserAsync(User user)
+        {
+            return await _userManager.UpdateAsync(user);
+        }
     }
 }

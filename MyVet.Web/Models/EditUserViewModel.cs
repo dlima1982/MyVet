@@ -1,14 +1,10 @@
-﻿using Microsoft.AspNetCore.Identity;
-using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using System.ComponentModel.DataAnnotations;
 
-namespace MyVet.Web.Data.Entities
+namespace MyVet.Web.Models
 {
-    public class User : IdentityUser
+    public class EditUserViewModel
     {
+        public int Id { get; set; }
 
         [Display(Name = "Documento")]
         [MaxLength(50, ErrorMessage = "El {0} No puede contener mas de {1} Caracteres.")]
@@ -25,14 +21,13 @@ namespace MyVet.Web.Data.Entities
         [Required(ErrorMessage = "El {0} es un campo obligatorio.")]
         public string LastName { get; set; }
 
-        [Display(Name = "Dirección")]
+        [Display(Name = "Direccion")]
         [MaxLength(50, ErrorMessage = "El {0} No puede contener mas de {1} Caracteres.")]
         public string Address { get; set; }
 
-        [Display(Name = "Full Name")]
-        public string FullName => $"{FirstName} {LastName}";
+        [Display(Name = "Telefono")]
+        [MaxLength(50, ErrorMessage = "El {0} No puede contener mas de {1} Caracteres.")]
+        public string PhoneNumber { get; set; }
 
-        [Display(Name = "Full Name")]
-        public string FullNameWithDocument => $"{FirstName} {LastName} - {Document}";
     }
 }
