@@ -32,14 +32,13 @@ namespace MyVet.Web.Data.Entities
 
 
         [Display(Name = "Fecha Nacimiento")]
-        [DisplayFormat(DataFormatString = "{0:yyyy/MM/dd HH:mm}")]
+        [DisplayFormat(DataFormatString = "{0:yyyy/MM/dd}")]
         public DateTime BornLocal => Born.ToLocalTime();
 
 
-        //TODO: replace the correct URL for the image
         public string ImageFullPath => string.IsNullOrEmpty(ImageUrl)
             ? null
-            : $"https://TBD.azurewebsites.net{ImageUrl.Substring(1)}";
+            : $"https://petsrus.azurewebsites.net{ImageUrl.Substring(1)}";
 
 
         public PetType PetType { get; set; }
